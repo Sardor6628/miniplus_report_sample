@@ -16,7 +16,7 @@ class UserModel {
     required this.clubsId,
     required this.workoutLevel,
     required this.workoutTarget,
-    required this.seqSchedule,//--
+    required this.seqSchedule, //--
     required this.clubName,
     required this.profileUrl,
     required this.workDate,
@@ -57,37 +57,41 @@ class UserModel {
   bool flag;
   String? group;
 
-
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    id:int.parse("${json["id"]??'0'}"),
-    secondId: int.parse("${json["second_id"]??'0'}"),
-    userid: json["userid"]??"",
-    userName: json["user_name"]??"",
-    uPassword: json["u_password"]??"",
-    rfid: json["rfid"]??"",
-    email: json["email"]??"",
-    phone: json["phone"]??"",
-    birthday: DateTime.parse(json["birthday"]),
-    gender: json["gender"]??"Male",
-    keypad: json["keypad"]??"",
-    clubsId: int.parse("${json["clubs_id"]??'0'}"),
-    workoutLevel: int.parse("${json["workout_level"]??'0'}"),
-    workoutTarget: int.parse("${json["workout_target"]??'0'}"),
-    seqSchedule: int.parse("${json["seq_schedule"]??'0'}"),
-    clubName: json["club_name"]??"",
-    profileUrl: json["profile_url"]??"",
-    workDate: json["work_date"]??"",
-    height: json["height"]??"",
-    weight: double.parse(json["weight"]??"0"),
-    isSupervisor: int.parse("${json["is_supervisor"]??'0'}"),
-    isExpert: int.parse("${json["is_expert"]??'0'}"),
-    isDirector: int.parse("${json["is_director"]??'0'}"),
-    regDate: json["reg_date"]??"",
-    flag: json["flag"].toString()=='1'?true:false,
-    group:hangulChosung(json["user_name"].toString()),
-  );
+        id: int.parse("${json["id"] ?? '0'}"),
+        secondId: int.parse("${json["second_id"] ?? '0'}"),
+        userid: json["userid"] ?? "",
+        userName: json["user_name"] ?? "",
+        uPassword: json["u_password"] ?? "",
+        rfid: json["rfid"] ?? "",
+        email: json["email"] ?? "",
+        phone: json["phone"] ?? "",
+        birthday: DateTime.parse(json["birthday"]),
+        gender: json["gender"] ?? "Male",
+        keypad: json["keypad"] ?? "",
+        clubsId: int.parse("${json["clubs_id"] ?? '0'}"),
+        workoutLevel: int.parse("${json["workout_level"] ?? '0'}"),
+        workoutTarget: int.parse("${json["workout_target"] ?? '0'}"),
+        seqSchedule: int.parse("${json["seq_schedule"] ?? '0'}"),
+        clubName: json["club_name"] ?? "Ronfic",
+        profileUrl: json["profile_url"] ?? "",
+        workDate: json["work_date"] ?? "",
+        height: json["height"] ?? "",
+        weight: double.parse(json["weight"] ?? "0"),
+        isSupervisor: int.parse("${json["is_supervisor"] ?? '0'}"),
+        isExpert: int.parse("${json["is_expert"] ?? '0'}"),
+        isDirector: int.parse("${json["is_director"] ?? '0'}"),
+        regDate: json["reg_date"] ?? "",
+        flag: json["flag"].toString() == '1' ? true : false,
+        group: hangulChosung(json["user_name"].toString()),
+      );
 
+  @override
+  String toString() {
+    return 'UserInformation: userid: $userid, id:$id userName: $userName, clubName: $clubName, group: $group';
+  }
 }
+
 String hangulChosung(String mtext) {
   var rCho = [
     "ㄱ",
@@ -111,9 +115,8 @@ String hangulChosung(String mtext) {
     "ㅎ"
   ];
   double cho, jung, jong;
-  try{
-    var nTmp = mtext.codeUnitAt(
-        0);
+  try {
+    var nTmp = mtext.codeUnitAt(0);
     if (nTmp >= int.parse("AC00", radix: 16) &&
         nTmp <= int.parse("D7A3", radix: 16)) {
       nTmp = nTmp - 0xAC00;
@@ -127,9 +130,7 @@ String hangulChosung(String mtext) {
       return String.fromCharCode(nTmp).toUpperCase();
     }
     return "?";
-
-  }
-  catch(e) {
+  } catch (e) {
     log("ronficzoneError: $e");
     return "?";
   }

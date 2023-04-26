@@ -101,17 +101,40 @@ class MininiPlusReportConstants {
       {required pw.Font godob,
       required int score,
       required pw.MemoryImage image}) {
-    if (score >= 90 && score <= 100) {
+    if (score >= 0 && score < 5) {
       return goodContainerDisplay(godob);
-    } else if (score >= 80 && score < 90) {
+    } else if (score >= 5 && score < 15) {
       return normalContainerDisplay(godob, image: image);
-    } else if (score >= 10 && score < 80) {
+    } else if (score >= 15) {
       return badContainerDisplay(godob, image: image);
     } else {
       return noDataContainerDisplay(godob);
     }
   }
-
+  pw.Positioned positionedTitle(
+      {required pw.Font pretendardSemibold,
+        required pw.Font pretendardMedium,
+        required String text,
+        required double leftPosition}) {
+    return pw.Positioned(
+        left: leftPosition,
+        top: 660,
+        child: pw.RichText(
+            text: pw.TextSpan(children: [
+              pw.TextSpan(
+                  style: pw.TextStyle(
+                      color: PdfColor.fromHex("#202121"),
+                      font: pretendardSemibold,
+                      fontSize: 10.0),
+                  text: text),
+              pw.TextSpan(
+                  style: pw.TextStyle(
+                      color: PdfColor.fromHex("#7d7e80"),
+                      font: pretendardMedium,
+                      fontSize: 6.0),
+                  text: "(kg)")
+            ])));
+  }
   pw.Positioned goodContainerDisplay(pw.Font godob) {
     return pw.Positioned(
         bottom: 0,
@@ -126,7 +149,7 @@ class MininiPlusReportConstants {
               decoration: pw.BoxDecoration(
                   color: PdfColor.fromHex("#087fed"),
                   borderRadius: pw.BorderRadius.circular(7)),
-              child: pw.Text("좋음",
+              child: pw.Text("Good",
                   style: pw.TextStyle(
                       color: PdfColors.white,
                       fontSize: 9,
@@ -159,7 +182,7 @@ class MininiPlusReportConstants {
                         child: pw.Image(image, width: 9, height: 9)
                       ),
                       pw.SizedBox(width: 3),
-                      pw.Text("노력",
+                      pw.Text("Normal",
                           style: pw.TextStyle(
                               color: PdfColors.white,
                               fontSize: 9,
@@ -192,7 +215,7 @@ class MininiPlusReportConstants {
                         child: pw.Image(image, width: 9, height: 8)
                     ),
                     pw.SizedBox(width: 3),
-                    pw.Text("위험",
+                    pw.Text("Bad",
                         style: pw.TextStyle(
                             color: PdfColors.white,
                             fontSize: 9,
@@ -216,7 +239,7 @@ class MininiPlusReportConstants {
               decoration: pw.BoxDecoration(
                   color: PdfColor.fromHex("#7d7e80"),
                   borderRadius: pw.BorderRadius.circular(7)),
-              child: pw.Text("데이터 없음",
+              child: pw.Text("None",
                   style: pw.TextStyle(
                       color: PdfColors.white,
                       fontSize: 9,
@@ -324,27 +347,27 @@ class MininiPlusReportConstants {
                 workoutPerformanceStatus(
                     pretendardMedium: pretendardMedium,
                     pretendardRegular: pretendardRegular,
-                    colorHex: "#087fed",
-                    text1: "좋음",
+                    colorHex: "#63c805",
+                    text1: "Good",
                     text2: ": 힘 차이가 거의 없습니다."),
                 workoutPerformanceStatus(
                     pretendardMedium: pretendardMedium,
                     pretendardRegular: pretendardRegular,
-                    colorHex: "#faa700",
-                    text1: "노력",
+                    colorHex: "#f7be00",
+                    text1: "Normal",
                     text2: ": 표기된 %만큼 그래프가 빈 쪽이 약합니다."),
                 workoutPerformanceStatus(
                     pretendardMedium: pretendardMedium,
                     pretendardRegular: pretendardRegular,
                     colorHex: "#f15248",
-                    text1: "위험",
+                    text1: "Bad",
                     text2: ": 약한 쪽의 부상 위험이 증가됩니다."),
                 workoutPerformanceStatus(
                     pretendardMedium: pretendardMedium,
                     pretendardRegular: pretendardRegular,
                     colorHex: "#7d7e80",
-                    text1: "데이터 없음",
-                    text2: ""),
+                    text1: "None",
+                    text2: ": 데이터 없음"),
               ])),
     );
   }
@@ -383,7 +406,9 @@ class MininiPlusReportConstants {
         required pw.Font pretendardBold,
         required pw.Font godob,
         required pw.MemoryImage alertIcon,
-        required PushPullRot pushPullRot}) {
+        required PushPullRot pushPullRot,
+        bool isRightLeft=true
+      }) {
     return pw.Container(
         height: 112,
         width: 117,
@@ -408,7 +433,7 @@ class MininiPlusReportConstants {
                 alignment: pw.Alignment.center,
                 width: 117,
                 child: pw.Text(
-                    DateFormat('yyyy-MM-dd').format(pushPullRot.date),
+                    DateFormat('yyyy-MM-dd').format(pushPullRot.defaultDate!),
                     style: pw.TextStyle(
                         fontSize: 8,
                         color: PdfColor.fromHex("#646566"),
@@ -417,7 +442,7 @@ class MininiPlusReportConstants {
           pw.Positioned(
             left: 0,
             top: 76,
-            child: pw.Text("좌",
+            child: pw.Text(isRightLeft?"좌":"전",
                 style: pw.TextStyle(
                     fontSize: 8,
                     color: PdfColor.fromHex("#7d7e80"),
@@ -431,7 +456,7 @@ class MininiPlusReportConstants {
           pw.Positioned(
             right: 0,
             top: 76,
-            child: pw.Text("우",
+            child: pw.Text(isRightLeft?"우":"후",
                 style: pw.TextStyle(
                     fontSize: 8,
                     color: PdfColor.fromHex("#7d7e80"),
@@ -447,12 +472,12 @@ class MininiPlusReportConstants {
                 child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: [
-                      pw.Text("${pushPullRot.score ?? 0}",
+                      pw.Text("${pushPullRot.percent!<0?"-":pushPullRot.percent}",
                           style: pw.TextStyle(
                               fontSize: 16,
                               color: PdfColor.fromHex("#202121"),
                               font: pretendardBold)),
-                      pw.Text("%",
+                      pw.Text("${pushPullRot.percent!<0?"":"%"}",
                           style: pw.TextStyle(
                               fontSize: 6,
                               color: PdfColor.fromHex("#202121"),
@@ -460,7 +485,7 @@ class MininiPlusReportConstants {
                     ]),
               )),
           getWidgetStatus(
-              godob: godob, score: pushPullRot.score ?? 0, image: alertIcon),
+              godob: godob, score: pushPullRot.percent!.floor() ?? 0, image: alertIcon),
         ]));
   }
 }

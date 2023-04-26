@@ -63,33 +63,116 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
           ),
         ),
         body: PdfPreview(
-          maxPageWidth: 29.7 * MininiPlusReportConstants.cm,
-          useActions: true,
-          canChangePageFormat: false,
-          canChangeOrientation: false,
-          canDebug: false,
-          pdfFileName: "${sampleUserData.userName}(Miniplus-Report).pdf",
-          build: (format) => _generatePdf(
-              PdfPageFormat(
-                  miniPlusReportConstants.width, miniPlusReportConstants.height,
-                  marginAll: 0),
-              'Test'),
-        ));
+            maxPageWidth: 29.7 * MininiPlusReportConstants.cm,
+            useActions: true,
+            canChangePageFormat: false,
+            canChangeOrientation: false,
+            canDebug: false,
+            pdfFileName: "${sampleUserData.userName}(Miniplus-Report).pdf",
+            build: (format) => _generatePdf(
+                PdfPageFormat(miniPlusReportConstants.width,
+                    miniPlusReportConstants.height,
+                    marginAll: 0),
+                'Test'),
+            loadingWidget: Container(
+              height: 100,
+              width: 200,
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text("Miniplus 결과지 생성중..."),
+                  Text("잠시만 기다려주세요."),
+                ],
+              ),
+            )));
   }
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
     final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: false);
     final pageTheme = await miniPlusReportConstants.myPageTheme(format);
     ScreenshotController screenshotController = ScreenshotController();
-    pw.MemoryImage chartImage = pw.MemoryImage(
-        await screenshotController.captureFromWidget(HalfPieChart()));
-    pw.MemoryImage barchart = pw.MemoryImage(
+    pw.MemoryImage lowCodePieChart =
+        pw.MemoryImage(await screenshotController.captureFromWidget(
+      HalfPieChart(
+        leftForce: samplePercentData.lowcode?.comparision1?[0] ?? 0,
+        rightForce: samplePercentData.lowcode?.comparision1?[1] ?? 0,
+        percent: samplePercentData.lowcode?.percent ?? 0,
+      ),
+      delay: const Duration(milliseconds: 1),
+    ));
+    pw.MemoryImage pullPieChart = pw.MemoryImage(
+        await screenshotController.captureFromWidget(HalfPieChart(
+      leftForce: samplePercentData.pull?.comparision1?[0] ?? 0,
+      rightForce: samplePercentData.pull?.comparision1?[1] ?? 0,
+      percent: samplePercentData.pull?.percent ?? 0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage pushPieChart = pw.MemoryImage(
+        await screenshotController.captureFromWidget(HalfPieChart(
+      leftForce: samplePercentData.push?.comparision1?[0] ?? 0,
+      rightForce: samplePercentData.push?.comparision1?[1] ?? 0,
+      percent: samplePercentData.push?.percent ?? 0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage rotPieChart = pw.MemoryImage(
+        await screenshotController.captureFromWidget(HalfPieChart(
+      leftForce: samplePercentData.rot?.comparision1?[0] ?? 0,
+      rightForce: samplePercentData.rot?.comparision1?[1] ?? 0,
+      percent: samplePercentData.rot?.percent ?? 0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage upcodePieChart = pw.MemoryImage(
+        await screenshotController.captureFromWidget(HalfPieChart(
+      leftForce: samplePercentData.upcode?.comparision1?[0] ?? 0,
+      rightForce: samplePercentData.upcode?.comparision1?[1] ?? 0,
+      percent: samplePercentData.upcode?.percent ?? 0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage lowcode = pw.MemoryImage(
         await screenshotController.captureFromWidget(WorkoutChart(
-      currentLeftHandForce: 40,
-      previousLeftHandForce: 50,
-      currentRightHandForce: 40,
-      previousRightHandForce: 50,
-    )));
+      prevRight: samplePercentData.lowcode?.comparision2?[1] ?? 0.0,
+      prevLeft: samplePercentData.lowcode?.comparision2?[0] ?? 0.0,
+      currRight: samplePercentData.lowcode?.comparision1?[1] ?? 0.0,
+      currLeft: samplePercentData.lowcode?.comparision1?[0] ?? 0.0,
+      isRightLeft: false,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage pull = pw.MemoryImage(
+        await screenshotController.captureFromWidget(WorkoutChart(
+      prevRight: samplePercentData.pull?.comparision2?[1] ?? 0.0,
+      prevLeft: samplePercentData.pull?.comparision2?[0] ?? 0.0,
+      currRight: samplePercentData.pull?.comparision1?[1] ?? 0.0,
+      currLeft: samplePercentData.pull?.comparision1?[0] ?? 0.0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage push = pw.MemoryImage(
+        await screenshotController.captureFromWidget(WorkoutChart(
+      prevRight: samplePercentData.push?.comparision2?[1] ?? 0.0,
+      prevLeft: samplePercentData.push?.comparision2?[0] ?? 0.0,
+      currRight: samplePercentData.push?.comparision1?[1] ?? 0.0,
+      currLeft: samplePercentData.push?.comparision1?[0] ?? 0.0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage rot = pw.MemoryImage(
+        await screenshotController.captureFromWidget(WorkoutChart(
+      prevRight: samplePercentData.rot?.comparision2?[1] ?? 0.0,
+      prevLeft: samplePercentData.rot?.comparision2?[0] ?? 0.0,
+      currRight: samplePercentData.rot?.comparision1?[1] ?? 0.0,
+      currLeft: samplePercentData.rot?.comparision1?[0] ?? 0.0,
+    ),
+          delay: const Duration(milliseconds: 1),));
+    pw.MemoryImage upcode = pw.MemoryImage(
+        await screenshotController.captureFromWidget(WorkoutChart(
+      prevRight: samplePercentData.upcode?.comparision2?[1] ?? 0.0,
+      prevLeft: samplePercentData.upcode?.comparision2?[0] ?? 0.0,
+      currRight: samplePercentData.upcode?.comparision1?[1] ?? 0.0,
+      currLeft: samplePercentData.upcode?.comparision1?[0] ?? 0.0,
+      isRightLeft: false,
+    ),
+          delay: const Duration(milliseconds: 1),));
     pw.Font godob =
         pw.Font.ttf(await rootBundle.load('assets/fonts/GODOB.ttf'));
     pw.Font gmarketsansttfbold = pw.Font.ttf(
@@ -320,7 +403,7 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
                     left: 77,
                     child: miniPlusReportConstants.chartDisplay(
                       godob: godob,
-                      chartImage: chartImage,
+                      chartImage: pushPieChart,
                       pretendardMedium: pretendardMedium,
                       pretendardBold: pretendardBold,
                       pretendardSemibold: pretendardSemibold,
@@ -334,7 +417,7 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
                     child: miniPlusReportConstants.chartDisplay(
                       alertIcon: iconAlert,
                       godob: godob,
-                      chartImage: chartImage,
+                      chartImage: pullPieChart,
                       pretendardMedium: pretendardMedium,
                       pretendardBold: pretendardBold,
                       pretendardSemibold: pretendardSemibold,
@@ -347,7 +430,7 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
                     child: miniPlusReportConstants.chartDisplay(
                       alertIcon: iconAlert,
                       godob: godob,
-                      chartImage: chartImage,
+                      chartImage: rotPieChart,
                       pretendardMedium: pretendardMedium,
                       pretendardBold: pretendardBold,
                       pretendardSemibold: pretendardSemibold,
@@ -358,28 +441,28 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
                     top: 472,
                     left: 77,
                     child: miniPlusReportConstants.chartDisplay(
-                      alertIcon: iconAlert,
-                      godob: godob,
-                      chartImage: chartImage,
-                      pretendardMedium: pretendardMedium,
-                      pretendardBold: pretendardBold,
-                      pretendardSemibold: pretendardSemibold,
-                      pushPullRot:
-                          miniPlusReportConstants.samplePercentData.upcode!,
-                    )),
+                        alertIcon: iconAlert,
+                        godob: godob,
+                        chartImage: upcodePieChart,
+                        pretendardMedium: pretendardMedium,
+                        pretendardBold: pretendardBold,
+                        pretendardSemibold: pretendardSemibold,
+                        pushPullRot:
+                            miniPlusReportConstants.samplePercentData.upcode!,
+                        isRightLeft: false)),
                 pw.Positioned(
                     top: 472,
                     left: 241,
                     child: miniPlusReportConstants.chartDisplay(
-                      godob: godob,
-                      chartImage: chartImage,
-                      pretendardMedium: pretendardMedium,
-                      pretendardSemibold: pretendardSemibold,
-                      pretendardBold: pretendardBold,
-                      alertIcon: iconAlert,
-                      pushPullRot:
-                          miniPlusReportConstants.samplePercentData.lowcode!,
-                    )),
+                        godob: godob,
+                        chartImage: lowCodePieChart,
+                        pretendardMedium: pretendardMedium,
+                        pretendardSemibold: pretendardSemibold,
+                        pretendardBold: pretendardBold,
+                        alertIcon: iconAlert,
+                        pushPullRot:
+                            miniPlusReportConstants.samplePercentData.lowcode!,
+                        isRightLeft: false)),
                 miniPlusReportConstants.listOfWorkoutStatusesWidget(
                     pretendardMedium, pretendardRegular),
                 pw.Positioned(
@@ -412,24 +495,51 @@ class _MiniPlusReportPrintState extends State<MiniPlusReportPrint> {
                               font: pretendardRegular,
                               fontSize: 7))
                     ])),
-                // pw.Positioned(
-                //   top:0, right: 200,
-                //   child: pw.Container(
-                //     color: PdfColors.red,
-                //     width: 92,
-                //     height: 110,
-                //     child: pw.Image(barchart, fit: pw.BoxFit.fitWidth),
-                //   ),
-                // )   ,
-                //
-                // pw.Positioned(
-                //   top:200, right: 200,
-                //   child: pw.Container(
-                //     color: PdfColors.red,
-                //     width: 92,
-                //     height: 110,
-                //   ),
-                // )
+                miniPlusReportConstants.positionedTitle(
+                    text: "상체 전면 좌:우",
+                    leftPosition: 45,
+                    pretendardSemibold: pretendardSemibold,
+                    pretendardMedium: pretendardMedium),
+                miniPlusReportConstants.positionedTitle(
+                    text: "상체 후면 좌:우",
+                    leftPosition: 150,
+                    pretendardSemibold: pretendardSemibold,
+                    pretendardMedium: pretendardMedium),
+                miniPlusReportConstants.positionedTitle(
+                    text: "몸통 좌:우",
+                    leftPosition: 269,
+                    pretendardSemibold: pretendardSemibold,
+                    pretendardMedium: pretendardMedium),
+                miniPlusReportConstants.positionedTitle(
+                    text: "상체 전:후",
+                    leftPosition: 382,
+                    pretendardSemibold: pretendardSemibold,
+                    pretendardMedium: pretendardMedium),
+                miniPlusReportConstants.positionedTitle(
+                    text: "하체 전:후",
+                    leftPosition: 492,
+                    pretendardSemibold: pretendardSemibold,
+                    pretendardMedium: pretendardMedium),
+                pw.Positioned(
+                    left: 32,
+                    bottom: 48,
+                    child: pw.Container(width: 92, child: pw.Image(push))),
+                pw.Positioned(
+                    left: 139,
+                    bottom: 48,
+                    child: pw.Container(width: 92, child: pw.Image(pull))),
+                pw.Positioned(
+                    left: 246,
+                    bottom: 48,
+                    child: pw.Container(width: 92, child: pw.Image(rot))),
+                pw.Positioned(
+                    left: 359,
+                    bottom: 48,
+                    child: pw.Container(width: 92, child: pw.Image(upcode))),
+                pw.Positioned(
+                    left: 472,
+                    bottom: 48,
+                    child: pw.Container(width: 92, child: pw.Image(lowcode))),
               ]));
         },
       ),
